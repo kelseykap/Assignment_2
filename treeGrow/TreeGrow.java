@@ -65,10 +65,27 @@ public class TreeGrow {
 		sundata.readData(args[0]);
 		System.out.println("Data loaded");
 		
-		frameX = sundata.sunmap.getDimX();
-		frameY = sundata.sunmap.getDimY();
-		setupGUI(frameX, frameY, sundata.trees);
+		//frameX = sundata.sunmap.getDimX();
+		//frameY = sundata.sunmap.getDimY();
+		//setupGUI(frameX, frameY, sundata.trees);
 		
 		// create and start simulation loop here as separate thread
+        for (int i = 0; i < 20 ; i+=2)
+        {
+            for (Tree t : sundata.trees)
+            {
+                if (t.inrange(20-i-2, 20-i))
+                {
+                    float initialExt = t.getExt();
+                    t.sungrow(sundata.sunmap);
+                    (sundata.sunmap).shadow(t);
+                    System.out.println("\nOriginal extent: ");
+                    System.out.printf("%.8f", initialExt);
+                    System.out.println("\nNew extent: ");
+                    System.out.printf("%.8f", t.getExt());
+                    System.out.println();
+                }
+            }
+        }
 	}
 }
