@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
+import javax.swing.Timer;
 
 public class TreeGrow {
 	
@@ -15,10 +16,19 @@ public class TreeGrow {
 	static int frameY;
 	static ForestPanel fp;
 
+    private static JButton resetButton;
+    private static JButton pauseButton;
+    private static JButton playButton;
+    private static JButton endButton;
+    private static JLabel yearLabel;
+
     static Tree[] arr;
     static Land map;
     final static int sequential_cutoff = 10000;
     static int interval;
+    
+    static boolean run;
+    static int count;
     
 	// start timer
 	private static void tick(){
@@ -30,7 +40,7 @@ public class TreeGrow {
 		return (System.currentTimeMillis() - startTime) / 1000.0f; 
 	}
 	
-	public static void setupGUI(int frameX,int frameY,Tree [] trees) {
+	public static void setupGUI(int frameX, int frameY, Tree [] trees) {
 		Dimension fsize = new Dimension(800, 800);
 		// Frame init and dimensions
     	JFrame frame = new JFrame("Photosynthesis"); 
@@ -41,14 +51,52 @@ public class TreeGrow {
       	JPanel g = new JPanel();
         g.setLayout(new BoxLayout(g, BoxLayout.PAGE_AXIS)); 
       	g.setPreferredSize(fsize);
- 
+        
 		fp = new ForestPanel(trees);
 		fp.setPreferredSize(new Dimension(frameX,frameY));
 		JScrollPane scrollFrame = new JScrollPane(fp);
 		fp.setAutoscrolls(true);
 		scrollFrame.setPreferredSize(fsize);
 	    g.add(scrollFrame);
-    	
+        
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
+        JButton resetButton = new JButton("Reset");
+        buttonPane.add(resetButton);
+        JButton playButton = new JButton("Play");
+        buttonPane.add(playButton);
+        JButton pauseButton = new JButton("Pause");
+        buttonPane.add(pauseButton);
+        JButton endButton = new JButton("End");
+        buttonPane.add(endButton);
+        JLabel yearLabel = new JLabel("Year 0");
+        buttonPane.add(yearLabel);
+        g.add(buttonPane);
+        
+        resetButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ep) {
+                System.exit(0);
+            }
+        });
+        
+        pauseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ep) {
+                run = false;
+            }
+        });
+        
+        playButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ep) {
+                run = true;
+            }
+        });
+        
+        endButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ep) {
+                System.exit(0);
+            }
+        });
+        
       	frame.setLocationRelativeTo(null);  // Center window on screen.
       	frame.add(g); //add contents to window
         frame.setContentPane(g);     
@@ -58,7 +106,7 @@ public class TreeGrow {
 	}
     
     static final ForkJoinPool fjPool = new ForkJoinPool();
-    static void simulate() { fjPool.invoke(new GrowSimulation(0, arr.length, arr, map, sequential_cutoff, interval)); }
+    static void simulate() { fjPool.invoke(new Grow(0, arr.length, arr, map, sequential_cutoff, interval)); }
     
 	public static void main(String[] args) {
 		SunData sundata = new SunData();
@@ -78,32 +126,46 @@ public class TreeGrow {
 		
 		frameX = sundata.sunmap.getDimX();
 		frameY = sundata.sunmap.getDimY();
-		setupGUI(frameX, frameY, sundata.trees);
+		setupGUI(frameX, frameY, arr);
 		
 		// create and start simulation loop here as separate thread
+        // garbage collection
+        //get active thread count
         
+        count = 0;
+        run = false;
         
-        tick();
-        for (int i = 0; i < 20 ; i+=2)
-        {
-            interval = i;
-            simulate();
+        //tick();
+        if (run == true) {
+            System.out.println("\nRun " + count);
+            for (int i = 0; i < 20 ; i+=2) {
+                interval = i;
+                simulate();
+            }
+            fp.forest = arr;
+            System.out.printf("%.6f", arr[0].getExt());
+            map.resetShade();
+            count++;
+            //yearLabel.setText(Integer.toString(count));
         }
-        System.out.println(tock());
-        
+        //System.out.println(tock());
         
         /**
         tick();
-        for (int i = 0; i < 20 ; i+=2)
-        {
-            for (Tree t : arr)
-            {
-                if (t.inrange(20-i-2, 20-i))
+        for (int s = 0; s < 100; s++) {
+            System.out.println("\nRun " + s);
+            for (int i = 0; i < 20 ; i+=2) {
+                for (Tree t : arr)
                 {
-                    t.sungrow(map);
-                    (map).shadow(t);
+                    if (t.inrange(20-i-2, 20-i))
+                    {
+                        t.sungrow(map);
+                        (map).shadow(t);
+                    }
+                    fp.forest = arr;
                 }
             }
+            map.resetShade();
         }
         System.out.println(tock());
         */
