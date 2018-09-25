@@ -3,7 +3,7 @@ package treeGrow;
 import java.io.*;
 import java.util.concurrent.RecursiveAction;
 
-public class GrowSimulation extends RecursiveAction  {
+public class Grow extends RecursiveAction  {
     
     int lo;
     int hi;
@@ -12,7 +12,7 @@ public class GrowSimulation extends RecursiveAction  {
     int seq_cutoff;
     int i;
     
-    GrowSimulation(int lo, int hi, Tree[] arr, Land land, int seq_cutoff, int i)
+    Grow(int lo, int hi, Tree[] arr, Land land, int seq_cutoff, int i)
     {
         this.lo=lo; this.hi=hi; this.arr = arr; this.land = land; this.seq_cutoff = seq_cutoff; this.i = i;
     }
@@ -32,8 +32,8 @@ public class GrowSimulation extends RecursiveAction  {
         }
         else
         {
-            GrowSimulation left = new GrowSimulation(lo, (hi+lo)/2, arr, land, seq_cutoff, i);
-            GrowSimulation right = new GrowSimulation((hi+lo)/2, hi, arr, land, seq_cutoff, i);
+            Grow left = new Grow(lo, (hi+lo)/2, arr, land, seq_cutoff, i);
+            Grow right = new Grow((hi+lo)/2, hi, arr, land, seq_cutoff, i);
             
             left.fork();
             //left.compute();
