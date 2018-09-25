@@ -37,16 +37,15 @@ public
         int extent = Math.round(ext);
         for (int i = -extent; i < extent+1; i++) {
             for (int j = -extent; j < extent+1; j++) {
-                System.out.println(land.getShade(xpos+i, ypos+j));
                 try{
                     sum = sum + land.getShade(xpos+i, ypos+j);
                 } catch (ArrayIndexOutOfBoundsException e) {};
             }
         }
-        System.out.println("\nSum:");
-        System.out.printf("%.6f", sum);
-        System.out.println("\nNumber of cells");
-        System.out.printf("%.6f", (float)Math.pow( (2*(Math.round(ext)) + 1), 2 ));
+        //System.out.println("\nSum:");
+        //System.out.printf("%.6f", sum);
+        //System.out.println("\nNumber of cells");
+        //System.out.printf("%.6f", (float)Math.pow( (2*(Math.round(ext)) + 1), 2 ));
         return sum/((float)Math.pow( (2*(Math.round(ext)) + 1), 2 ));
 	}
 	
@@ -59,7 +58,7 @@ public
 	void sungrow(Land land) {
         float avg = sunexposure(land);
         ext = ext + (avg/growfactor);
-        System.out.println("\nAvg: ");
-        System.out.printf("%.8f", avg);
+        //System.out.println("\nAvg: ");
+        //System.out.printf("%.8f", avg);
 	}
 }

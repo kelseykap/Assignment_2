@@ -1,5 +1,6 @@
 package treeGrow;
 
+import java.util.concurrent.ForkJoinPool;
 import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -8,11 +9,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class TreeGrow {
-	static long startTime = 0;
+	
+    static long startTime = 0;
 	static int frameX;
 	static int frameY;
 	static ForestPanel fp;
 
+    static Tree[] arr;
+    static Land map;
+    final static int sequential_cutoff = 10000;
+    static int interval;
+    
 	// start timer
 	private static void tick(){
 		startTime = System.currentTimeMillis();
@@ -49,8 +56,10 @@ public class TreeGrow {
         Thread fpt = new Thread(fp);
         fpt.start();
 	}
-	
-		
+    
+    static final ForkJoinPool fjPool = new ForkJoinPool();
+    static void simulate() { fjPool.invoke(new GrowSimulation(0, arr.length, arr, map, sequential_cutoff, interval)); }
+    
 	public static void main(String[] args) {
 		SunData sundata = new SunData();
 		
@@ -64,28 +73,39 @@ public class TreeGrow {
 		// read in forest and landscape information from file supplied as argument
 		sundata.readData(args[0]);
 		System.out.println("Data loaded");
+        arr = sundata.trees;
+        map = sundata.sunmap;
 		
-		//frameX = sundata.sunmap.getDimX();
-		//frameY = sundata.sunmap.getDimY();
-		//setupGUI(frameX, frameY, sundata.trees);
+		frameX = sundata.sunmap.getDimX();
+		frameY = sundata.sunmap.getDimY();
+		setupGUI(frameX, frameY, sundata.trees);
 		
 		// create and start simulation loop here as separate thread
+        
+        
+        tick();
         for (int i = 0; i < 20 ; i+=2)
         {
-            for (Tree t : sundata.trees)
+            interval = i;
+            simulate();
+        }
+        System.out.println(tock());
+        
+        
+        /**
+        tick();
+        for (int i = 0; i < 20 ; i+=2)
+        {
+            for (Tree t : arr)
             {
                 if (t.inrange(20-i-2, 20-i))
                 {
-                    float initialExt = t.getExt();
-                    t.sungrow(sundata.sunmap);
-                    (sundata.sunmap).shadow(t);
-                    System.out.println("\nOriginal extent: ");
-                    System.out.printf("%.8f", initialExt);
-                    System.out.println("\nNew extent: ");
-                    System.out.printf("%.8f", t.getExt());
-                    System.out.println();
+                    t.sungrow(map);
+                    (map).shadow(t);
                 }
             }
         }
+        System.out.println(tock());
+        */
 	}
 }
