@@ -20,8 +20,9 @@ public class TreeGrow {
     private static JButton pauseButton;
     private static JButton playButton;
     private static JButton endButton;
-    private static JLabel yearLabel;
-
+    
+    static JLabel yearLabel = new JLabel("Year 0");
+    
     static Tree[] arr;
     static Land map;
     final static int sequential_cutoff = 10000;
@@ -52,6 +53,11 @@ public class TreeGrow {
         g.setLayout(new BoxLayout(g, BoxLayout.PAGE_AXIS)); 
       	g.setPreferredSize(fsize);
         
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.LINE_AXIS));
+        titlePanel.add(yearLabel);
+        g.add(titlePanel);
+        
 		fp = new ForestPanel(trees);
 		fp.setPreferredSize(new Dimension(frameX,frameY));
 		JScrollPane scrollFrame = new JScrollPane(fp);
@@ -59,23 +65,25 @@ public class TreeGrow {
 		scrollFrame.setPreferredSize(fsize);
 	    g.add(scrollFrame);
         
-        JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
         JButton resetButton = new JButton("Reset");
-        buttonPane.add(resetButton);
+        buttonPanel.add(resetButton);
         JButton playButton = new JButton("Play");
-        buttonPane.add(playButton);
+        buttonPanel.add(playButton);
         JButton pauseButton = new JButton("Pause");
-        buttonPane.add(pauseButton);
+        buttonPanel.add(pauseButton);
         JButton endButton = new JButton("End");
-        buttonPane.add(endButton);
-        JLabel yearLabel = new JLabel("Year 0");
-        buttonPane.add(yearLabel);
-        g.add(buttonPane);
+        buttonPanel.add(endButton);
+        g.add(buttonPanel);
         
         resetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ep) {
-                System.exit(0);
+                count = 0;
+                yearLabel.setText("Year " + Integer.toString(count));
+                for (Tree t: arr) {
+                        t.setExt((float)0.4);
+                }
             }
         });
         
@@ -88,6 +96,7 @@ public class TreeGrow {
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ep) {
                 run = true;
+                //yearLabel.setText(Integer.toString(count));
             }
         });
         
@@ -136,17 +145,26 @@ public class TreeGrow {
         run = false;
         
         //tick();
-        if (run == true) {
-            System.out.println("\nRun " + count);
-            for (int i = 0; i < 20 ; i+=2) {
-                interval = i;
-                simulate();
+        while (true) {
+            if (run == true) {
+                System.out.println("\nRun " + count);
+                for (int i = 0; i < 20 ; i+=2) {
+                    interval = i;
+                    simulate();
+                }
+                fp.forest = arr;
+                System.out.printf("%.6f", arr[0].getExt());
+                map.resetShade();
+                count++;
+                yearLabel.setText("Year " + Integer.toString(count));
             }
-            fp.forest = arr;
-            System.out.printf("%.6f", arr[0].getExt());
-            map.resetShade();
-            count++;
-            //yearLabel.setText(Integer.toString(count));
+            else {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                };
+            }
         }
         //System.out.println(tock());
         
