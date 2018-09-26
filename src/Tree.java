@@ -1,5 +1,3 @@
-package treeGrow;
-
 // Trees define a canopy which covers a square area of the landscape
 public class Tree{
 	
@@ -33,8 +31,20 @@ public
 
 	// return the average sunlight for the cells covered by the tree
 	float sunexposure(Land land){
-		// to do 
-		return 0.0f; // not correct
+        float sum = 0;
+        int extent = Math.round(ext);
+        for (int i = -extent; i < extent+1; i++) {
+            for (int j = -extent; j < extent+1; j++) {
+                try{
+                    sum = sum + land.getShade(xpos+i, ypos+j);
+                } catch (ArrayIndexOutOfBoundsException e) {};
+            }
+        }
+        //System.out.println("\nSum:");
+        //System.out.printf("%.6f", sum);
+        //System.out.println("\nNumber of cells");
+        //System.out.printf("%.6f", (float)Math.pow( (2*(Math.round(ext)) + 1), 2 ));
+        return sum/((float)Math.pow( (2*(Math.round(ext)) + 1), 2 ));
 	}
 	
 	// is the tree extent within the provided range [minr, maxr)
@@ -44,6 +54,9 @@ public
 	
 	// grow a tree according to its sun exposure
 	void sungrow(Land land) {
-		// to do
+        float avg = sunexposure(land);
+        ext = ext + (avg/growfactor);
+        //System.out.println("\nAvg: ");
+        //System.out.printf("%.8f", avg);
 	}
 }
