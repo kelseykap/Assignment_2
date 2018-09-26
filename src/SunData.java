@@ -1,5 +1,3 @@
-package treeGrow;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -22,7 +20,7 @@ public class SunData{
 			sunmap = new Land(dimx,dimy);
 			for(int x = 0; x < dimx; x++)
 				for(int y = 0; y < dimy; y++) {
-					sunmap.setFull(x,y,sc.nextFloat());	
+					sunmap.setFull(x,y,sc.nextFloat());
 				}
 			sunmap.resetShade();
 			

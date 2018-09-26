@@ -7,13 +7,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import javax.swing.Timer;
 
-public class TreeGrow {
+public class TreeGrowSeq {
 	
     static long startTime = 0;
-
+    
     static Tree[] arr;
     static Land map;
-    final static int sequential_cutoff = 100000;
+    final static int sequential_cutoff = 10000;
     
     static int count;
     
@@ -25,8 +25,6 @@ public class TreeGrow {
 		return (System.currentTimeMillis() - startTime) / 1000.0f; 
 	}
 	
-    static final ForkJoinPool fjPool = new ForkJoinPool();
-    
 	public static void main(String[] args) {
 		
 		if(args.length != 1)
@@ -42,9 +40,6 @@ public class TreeGrow {
         map = sundata.sunmap;
 
 		View v = new View(sundata.sunmap.getDimX(), sundata.sunmap.getDimY(), arr);
-		
-        // garbage collection
-        //get active thread count
         
         count = 0;
         
@@ -53,19 +48,28 @@ public class TreeGrow {
             if (v.reset == true) {
                 count = 0;
                 v.yearLabel.setText("Year " + Integer.toString(count));
-                fjPool.invoke(new Reset(0, arr.length, arr, 100000));
+                for (Tree t: arr) {
+                    t.setExt((float)0.4);
+                }
                 v.reset = false;
             }
-
-            if (v.run == true) {
+            
+            else if (v.run == true) {
                 //System.out.println("\nRun " + count);
                 tick();
                 for (int i = 0; i < 20 ; i+=2) {
-                    fjPool.invoke(new Grow(0, arr.length, arr, map, sequential_cutoff, i));
+                    for (Tree t : arr)
+                    {
+                        if (t.inrange(20-i-2, 20-i))
+                        {
+                            t.sungrow(map);
+                            (map).shadow(t);
+                        }
+                    }
                 }
-                
+
                 //System.out.printf("%.6f", arr[0].getExt());
-                
+
                 float totalShade = 0;
                 for (int k = 0; k < map.dx; k++) {
                     for (int j = 0; j < map.dy; j++) {
@@ -77,8 +81,10 @@ public class TreeGrow {
                 map.resetShade();
                 count++;
                 v.yearLabel.setText("Year " + Integer.toString(count));
-                //sundata.writeData("attachments/ParallelOutput" + Integer.toString(count) + ".txt");
+
+                //sundata.writeData("attachments/SequentialOutput" + Integer.toString(count) + ".txt");
                 //System.out.println(tock());
+            
             }
             else {
                 try {

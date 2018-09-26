@@ -1,26 +1,43 @@
+# Makefile for CSC2002S Assignment 2
+
 JAVAC=/usr/bin/javac
-.SUFFIXES: .java .class
 
-SRCDIR=src
-BINDIR=bin
-DOCDIR=doc
+SRCDIR = ./src/
+BINDIR = ./bin/
+DOCDIR = ./doc/
 
-$(BINDIR)/%.class:$(SRCDIR)/%.java
-	$(JAVAC) -d $(BINDIR)/ -cp $(BINDIR) $<
+JFLAGS = -g -d $(BINDIR) -cp $(SRCDIR)
 
-CLASSES=Tree.class ReadData.class WriteData.class Sequential.class Parallel.class SunExposureApp.class
-CLASS_FILES=$(CLASSES:%.class=$(BINDIR)/%.class)
+COMPILE = $(JAVAC) $(JFLAGS)
 
-JAVAS=Tree.java ReadData.java WriteData.java Sequential.java Parallel.java SunExposureApp.java
-JAVA_FILES=$(JAVAS:%.java=$(SRCDIR)/%.java)
+EMPTY = 
 
-default: $(CLASS_FILES)
+JAVA_FILES = $(subst $(SRCDIR), $(EMPTY), $(wildcard $(SRCDIR)*.java))
 
-clean:
-	rm $(BINDIR)/*.class
+ALL_FILES = $(JAVA_FILES)
+
+CLASS_FILES = $(ALL_FILES:.java=.class)
+
+default: $(addprefix $(BINDIR), $(CLASS_FILES))
+
+$(BINDIR)%.class : $(SRCDIR)%.java
+	$(COMPILE) $<
+
+INPUT_FILE=attachments/sample_input.txt
+
+INPUT=./attachments/$(INPUT_FILE)
 
 run:
-	java -cp bin SunExposureApp ${ARGS}
+	java -cp $(BINDIR) TreeGrow $(INPUT_FILE)
 
-javadoc: $(CLASS_FILES)
-	javadoc -d $(DOCDIR) $(JAVA_FILES)
+runseq:
+	java -cp $(BINDIR) TreeGrowSeq $(INPUT_FILE)
+
+docs:
+	find $(SRCDIR) -type f -name "*.java" | xargs javadoc -d $(DOCDIR) 
+
+tar:
+	tar --exclude=./outputs/* --exclude='./.git' -czvf Assignment1_parrelel.tar.gz ./src ./data ./doc ./bin ./outputs ./Makefile ./Report/CSC2001_Ass3_HashTables.pdfs
+
+clean: 
+	rm -rf $(BINDIR)*.class

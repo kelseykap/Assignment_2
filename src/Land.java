@@ -1,52 +1,61 @@
-package treeGrow;
-
-public class Land{
+public class Land {
 	
-	// to do
-	// sun exposure data here
+    int dx;
+    int dy;
+    float[][] fullVals;
+    float[][] shadeVals;
 
-	static float shadefraction = 0.1f; // only this fraction of light is transmitted by a tree
-
+	static float shadefraction = 0.1f;
+    
 	Land(int dx, int dy) {
-		// to do
+        this.dx = dx; this.dy = dy;
+        fullVals = new float[dx][dy];
+        shadeVals = new float[dx][dy];
 	}
 
 	int getDimX() {
-		// to do
-		return 0; // incorrect value
+		return dx;
 	}
 	
 	int getDimY() {
-		// to do
-		return 0; // incorrect value
+        return dy;
 	}
 	
-	// Reset the shaded landscape to the same as the initial sun exposed landscape
-	// Needs to be done after each growth pass of the simulator
 	void resetShade() {
-		// to do
+        for (int i = 0; i < dx; i++) {
+            for (int j = 0; j< dy; j++) {
+                setFull(i, j, getFull(i, j));
+            }
+        }
 	}
 	
 	float getFull(int x, int y) {
-		// to do
-		return 0.0f; // incorrect value
+        return fullVals[x][y];
 	}
 	
 	void setFull(int x, int y, float val) {
-		// to do 
+        fullVals[x][y] = val;
+        shadeVals[x][y] = val;
 	}
 	
 	float getShade(int x, int y) {
-		// to do 
-		return 0.0f; // incorrect value
+		return shadeVals[x][y];
 	}
 	
 	void setShade(int x, int y, float val){
-		// to do
+        shadeVals[x][y] = val;
 	}
 	
-	// reduce the 
 	void shadow(Tree tree){
-		// to do
+        int ext = Math.round(tree.getExt());
+        int x = tree.getX();
+        int y = tree.getY();
+        for (int i = -ext; i < ext+1; i++) {
+            for (int j = -ext; j < ext+1; j++) {
+                try{
+                    setShade(x+i, y+j, getShade(x+i, y+j)*shadefraction);
+                } catch (ArrayIndexOutOfBoundsException e) {};
+            }
+        }
 	}
 }
