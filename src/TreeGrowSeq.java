@@ -42,12 +42,14 @@ public class TreeGrowSeq {
 		View v = new View(sundata.sunmap.getDimX(), sundata.sunmap.getDimY(), arr);
         
         count = 0;
+        int runCount = 0; // for testing specific amount of runs
         
         while (true) {
             
             if (v.reset == true) {
-                count = 0;
-                v.yearLabel.setText("Year " + Integer.toString(count));
+                //count = 0;
+                //v.yearLabel.setText("Year " + Integer.toString(count));
+                v.reset();
                 for (Tree t: arr) {
                     t.setExt((float)0.4);
                 }
@@ -57,6 +59,7 @@ public class TreeGrowSeq {
             else if (v.run == true) {
                 //System.out.println("\nRun " + count);
                 tick();
+                v.yearIncrease();
                 for (int i = 0; i < 20 ; i+=2) {
                     for (Tree t : arr)
                     {
@@ -70,20 +73,22 @@ public class TreeGrowSeq {
 
                 //System.out.printf("%.6f", arr[0].getExt());
 
-                float totalShade = 0;
+                /**float totalShade = 0;
                 for (int k = 0; k < map.dx; k++) {
                     for (int j = 0; j < map.dy; j++) {
                         totalShade = totalShade + map.shadeVals[k][j];
                     }
                 }
-                System.out.println(totalShade);
+                System.out.println(totalShade);*/
                 
                 map.resetShade();
                 count++;
                 v.yearLabel.setText("Year " + Integer.toString(count));
 
                 //sundata.writeData("attachments/SequentialOutput" + Integer.toString(count) + ".txt");
-                //System.out.println(tock());
+                System.out.println(tock());
+                runCount++;
+                if (runCount > 100) { System.exit(0); }
             
             }
             else {

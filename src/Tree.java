@@ -37,6 +37,7 @@ public
             for (int j = -extent; j < extent+1; j++) {
                 try{
                     sum = sum + land.getShade(xpos+i, ypos+j);
+                    //System.out.println("get," + Integer.toString(xpos+i) + "," + Integer.toString(ypos+j));
                 } catch (ArrayIndexOutOfBoundsException e) {};
             }
         }

@@ -6,27 +6,31 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 import javax.swing.Timer;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class View {
 	
-	static int frameX;
-	static int frameY;
-	static ForestPanel fp;
+	int frameX;
+	int frameY;
+	ForestPanel fp;
+    Tree[] arr;
 
-    private static JButton resetButton;
-    private static JButton pauseButton;
-    private static JButton playButton;
-    private static JButton endButton;
+    private JButton resetButton;
+    private JButton pauseButton;
+    private JButton playButton;
+    private JButton endButton;
     
-    static JLabel yearLabel = new JLabel("Year 0");
+    boolean run;
+    boolean reset;
+    //AtomicLong year;
+    int year;
     
-    static Tree[] arr;
-    
-    static boolean run;
-    static boolean reset;
+    JLabel yearLabel = new JLabel("Year 0");
     
 	public View(int frameX, int frameY, Tree [] trees) {
 		
+        //year = new AtomicLong(0);
+        year = 0;
         run = false;
         
         Dimension fsize = new Dimension(800, 800);
@@ -94,4 +98,31 @@ public class View {
         Thread fpt = new Thread(fp);
         fpt.start();
 	}
+    
+    /**public long get() {
+        return year.get();
+    }*/
+    
+    /**public void set(long val) {
+        year.set(val);
+    }*/
+    
+    /**public void incr() {
+        System.out.println(year.toString());
+        year.getAndIncrement();
+    }*/
+
+    
+    public void reset() {
+        year = 0;
+        yearLabel.setText("Year " + Integer.toString(year));
+        //yearLabel.setText("Year " + year.toString());
+    }
+    
+    public void yearIncrease() {
+        year++;
+        //System.out.println(Integer.toString(year));
+        yearLabel.setText("Year " + Integer.toString(year));
+    }
+    
 }
