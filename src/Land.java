@@ -21,6 +21,7 @@ public class Land {
         return dy;
 	}
 	
+    // use parallel algorithm here!
 	void resetShade() {
         for (int i = 0; i < dx; i++) {
             for (int j = 0; j< dy; j++) {
@@ -54,6 +55,7 @@ public class Land {
             for (int j = -ext; j < ext+1; j++) {
                 try{
                     setShade(x+i, y+j, getShade(x+i, y+j)*shadefraction);
+                    //System.out.println("set," + Integer.toString(x+i) + "," + Integer.toString(y+j));
                 } catch (ArrayIndexOutOfBoundsException e) {};
             }
         }

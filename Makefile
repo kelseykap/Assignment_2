@@ -23,12 +23,19 @@ default: $(addprefix $(BINDIR), $(CLASS_FILES))
 $(BINDIR)%.class : $(SRCDIR)%.java
 	$(COMPILE) $<
 
-INPUT_FILE=attachments/sample_input.txt
+INPUT_FILE=sample_input.txt
+#INPUT_FILE-dataSize100.txt
+#INPUT_FILE=dataSize1000.txt
+#INPUT_FILE=dataSize10000.txt
+#INPUT_FILE=dataSize100000.txt
 
 INPUT=./attachments/$(INPUT_FILE)
 
 run:
-	java -cp $(BINDIR) TreeGrow $(INPUT_FILE)
+	java -cp $(BINDIR) TreeGrow $(INPUT)
+
+runseq:
+	java -cp $(BINDIR) TreeGrowSeq $(INPUT)
 
 docs:
 	find $(SRCDIR) -type f -name "*.java" | xargs javadoc -d $(DOCDIR) 

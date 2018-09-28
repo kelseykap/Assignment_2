@@ -22,8 +22,10 @@ public class Grow extends RecursiveAction  {
             for (int j = lo; j < hi; j++) {
                 if (arr[j].inrange(20-i-2, 20-i))
                 {
+                    //synchronized(land) {
                     arr[j].sungrow(land);
                     (land).shadow(arr[j]);
+                    //}
                 }
             }
         }
