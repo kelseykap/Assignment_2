@@ -22,15 +22,16 @@ public class View {
     
     boolean run;
     boolean reset;
-    //AtomicLong year;
-    int year;
+    AtomicLong year;
     
     JLabel yearLabel = new JLabel("Year 0");
     
+    /**
+     Constructor method for the class to set up the GUI and handle events with action listeners
+     */
 	public View(int frameX, int frameY, Tree [] trees) {
 		
-        //year = new AtomicLong(0);
-        year = 0;
+        year = new AtomicLong(0);
         run = false;
         
         Dimension fsize = new Dimension(800, 800);
@@ -99,30 +100,31 @@ public class View {
         fpt.start();
 	}
     
-    /**public long get() {
+    /**
+     Getter method for Atomic long
+     
+     @return returns the year as a long
+     */
+    public long get() {
         return year.get();
-    }*/
-    
-    /**public void set(long val) {
-        year.set(val);
-    }*/
-    
-    /**public void incr() {
-        System.out.println(year.toString());
-        year.getAndIncrement();
-    }*/
-
-    
-    public void reset() {
-        year = 0;
-        yearLabel.setText("Year " + Integer.toString(year));
-        //yearLabel.setText("Year " + year.toString());
     }
     
-    public void yearIncrease() {
-        year++;
-        //System.out.println(Integer.toString(year));
-        yearLabel.setText("Year " + Integer.toString(year));
+    /**
+     Setter method for Atomic long
+     
+     @param takes in a long value to set the year
+     */
+    public void set(long val) {
+        year.set(val);
+        yearLabel.setText("Year " + Long.toString(get()));
+    }
+    
+    /**
+     Method to increment the Atomic long
+     */
+    public void incr() {
+        year.getAndIncrement();
+        yearLabel.setText("Year " + Long.toString(get()));
     }
     
 }

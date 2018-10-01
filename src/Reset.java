@@ -8,11 +8,22 @@ public class Reset extends RecursiveAction  {
     Tree[] arr;
     int seq_cutoff;
     
+    /**
+     Constructor method for the class
+     
+     @param lo takes in the lower bound
+     @param hi takes in the upper bound
+     @param arr takes in the array of Tree objects
+     @param seq_cutoff specifies the cut-off
+     */
     Reset(int lo, int hi, Tree[] arr, int seq_cutoff)
     {
         this.lo=lo; this.hi=hi; this.arr = arr; this.seq_cutoff = seq_cutoff;
     }
     
+    /**
+     Method that recursuvely runs through the Tree array, and creates new threads
+     */
     protected void compute()
     {
         if( (hi-lo) < seq_cutoff)

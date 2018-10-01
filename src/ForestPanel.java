@@ -4,19 +4,21 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.util.*;
 
-
 public class ForestPanel extends JPanel implements Runnable {
 	Tree[] forest;
 	List<Integer> rndorder;
 	
+    /**
+     Constructor for the ForestPanel class
+     
+     @param trees takes in an array of Tree objects
+     */
 	ForestPanel(Tree[] trees) {
 		forest=trees;
 	}
 	
     /**
-     Method to
-     
-     @param g
+     Method to plot the Tree objects in the GUI
      */
 	public void paintComponent(Graphics g) {
 		int width = getWidth();
@@ -42,7 +44,7 @@ public class ForestPanel extends JPanel implements Runnable {
 	}
 	
     /**
-     Method to
+     Method to run the ForestPanel class using multiple threads
      */
 	public void run() {
 			
@@ -52,7 +54,7 @@ public class ForestPanel extends JPanel implements Runnable {
 		java.util.Collections.shuffle(rndorder);
 		
 		while(true) {
-			repaint(50);
+			repaint(20);
 			try {
 				Thread.sleep(20);
 			} catch (InterruptedException e) {
