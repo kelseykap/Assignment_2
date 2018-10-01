@@ -23,11 +23,13 @@ default: $(addprefix $(BINDIR), $(CLASS_FILES))
 $(BINDIR)%.class : $(SRCDIR)%.java
 	$(COMPILE) $<
 
-INPUT_FILE=sample_input.txt
-#INPUT_FILE-dataSize100.txt
+#INPUT_FILE=sample_input.txt
+#INPUT_FILE=dataSize10.txt
+#INPUT_FILE=dataSize100.txt
 #INPUT_FILE=dataSize1000.txt
 #INPUT_FILE=dataSize10000.txt
-#INPUT_FILE=dataSize100000.txt
+INPUT_FILE=dataSize100000.txt
+#INPUT_FILE=sample.txt
 
 INPUT=./attachments/$(INPUT_FILE)
 

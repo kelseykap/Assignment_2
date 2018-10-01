@@ -6,7 +6,7 @@ from sys import argv
 
 #output = open('shadeParSortB.txt')
 #sample = open('shadeParSortA.txt')
-getSet = open('getSetTestSync10000_1000.txt')
+getSet = open('test1.txt')
 
 filearg = sys.argv[1]
 

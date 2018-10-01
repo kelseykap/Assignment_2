@@ -6,11 +6,17 @@ public class Land {
     float[][] shadeVals;
 
 	static float shadefraction = 0.1f;
+    static float growfactor = 1000.0f;
+    
+    Object[] rowLocks;
     
 	Land(int dx, int dy) {
         this.dx = dx; this.dy = dy;
         fullVals = new float[dx][dy];
         shadeVals = new float[dx][dy];
+        
+        rowLocks = new Object[dx];
+        for(int s = 0; s < dx; s++) { rowLocks[s] = new Object(); }
 	}
 
 	int getDimX() {
@@ -21,7 +27,6 @@ public class Land {
         return dy;
 	}
 	
-    // use parallel algorithm here!
 	void resetShade() {
         for (int i = 0; i < dx; i++) {
             for (int j = 0; j< dy; j++) {
@@ -40,24 +45,27 @@ public class Land {
 	}
 	
 	float getShade(int x, int y) {
-		return shadeVals[x][y];
-	}
+        return shadeVals[x][y];
+    }
 	
 	void setShade(int x, int y, float val){
         shadeVals[x][y] = val;
-	}
-	
-	void shadow(Tree tree){
+    }
+    
+    void shadow(Tree tree){
         int ext = Math.round(tree.getExt());
         int x = tree.getX();
         int y = tree.getY();
-        for (int i = -ext; i < ext+1; i++) {
-            for (int j = -ext; j < ext+1; j++) {
-                try{
-                    setShade(x+i, y+j, getShade(x+i, y+j)*shadefraction);
-                    //System.out.println("set," + Integer.toString(x+i) + "," + Integer.toString(y+j));
-                } catch (ArrayIndexOutOfBoundsException e) {};
+        synchronized(this) {
+            tree.sungrow(this);
+            for (int i = -ext; i < ext+1; i++) {
+                for (int j = -ext; j < ext+1; j++) {
+                    try{
+                        setShade(x+i, y+j, getShade(x+i, y+j)*shadefraction);
+                    } catch (ArrayIndexOutOfBoundsException e) {};
+                }
             }
         }
 	}
+
 }
