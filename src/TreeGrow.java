@@ -10,23 +10,29 @@ import javax.swing.Timer;
 public class TreeGrow {
 	
     static long startTime = 0;
-
     static Tree[] arr;
     static Land map;
     final static int sequential_cutoff = 25000;
-    
     static int count;
+    static final ForkJoinPool fjPool = new ForkJoinPool();
     
+    /**
+     Method to start a timer
+     */
 	private static void tick(){
 		startTime = System.currentTimeMillis();
 	}
 	
+    /**
+     Method to stop a timer and return the time passed
+     */
 	private static float tock(){
 		return (System.currentTimeMillis() - startTime) / 1000.0f; 
 	}
-	
-    static final ForkJoinPool fjPool = new ForkJoinPool();
     
+    /**
+     Main method for the application
+     */
 	public static void main(String[] args) {
 		
 		if(args.length != 1)
@@ -42,30 +48,24 @@ public class TreeGrow {
         map = sundata.sunmap;
 
 		View v = new View(sundata.sunmap.getDimX(), sundata.sunmap.getDimY(), arr);
-		
-        // garbage collection
-        //get active thread count
-        
-        count = 0;
-        int runCount = 0;
         
         while (true) {
             
             if (v.reset == true) {
-                v.reset();
+                v.set(0);
                 fjPool.invoke(new Reset(0, arr.length, arr, 100000));
                 v.reset = false;
                 
                 try {
-                    Thread.sleep(20);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 };
             }
 
             if (v.run == true) {
-                tick();
-                v.yearIncrease();
+                //tick();
+                v.incr();
                 for (int i = 0; i < 20 ; i+=2) {
                     fjPool.invoke(new Grow(0, arr.length, arr, map, sequential_cutoff, i));
                 }
@@ -73,14 +73,12 @@ public class TreeGrow {
                 map.resetShade();
                 
                 try {
-                    Thread.sleep(20);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 };
                 
-                System.out.println(tock());
-                runCount++;
-                if (runCount > 100) { System.exit(0); }
+                //System.out.println(tock());
 
             }
             else {

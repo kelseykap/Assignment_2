@@ -4,17 +4,20 @@ import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-// Trees define a canopy which covers a square area of the landscape
 public class SunData{
 	
-	Land sunmap; // regular grid with average daily sunlight stored at each grid point
-	Tree [] trees; // array of individual tress located on the sunmap	
+	Land sunmap;
+	Tree [] trees;
 	
+    /**
+     Method to read in data from a specified file
+     
+     @param fileName takes in a String
+     */
 	void readData(String fileName){ 
 		try{ 
 			Scanner sc = new Scanner(new File(fileName));
 			
-			// load sunmap
 			int dimx = sc.nextInt(); 
 			int dimy = sc.nextInt();
 			sunmap = new Land(dimx,dimy);
@@ -24,7 +27,6 @@ public class SunData{
 				}
 			sunmap.resetShade();
 			
-			// load forest
 			int numt = sc.nextInt();
 			trees = new Tree[numt];
 			for(int t=0; t < numt; t++)
@@ -46,6 +48,11 @@ public class SunData{
 		}
 	}
 	
+    /**
+     Method to write data to a specified file
+     
+     @param fileName takes in a String
+     */
 	void writeData(String fileName){
 		 try{ 
 			 FileWriter fileWriter = new FileWriter(fileName);

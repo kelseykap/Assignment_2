@@ -10,21 +10,26 @@ import javax.swing.Timer;
 public class TreeGrowSeq {
 	
     static long startTime = 0;
-    
     static Tree[] arr;
     static Land map;
-    final static int sequential_cutoff = 25000;
     
-    static int count;
-    
+    /**
+     Method to start a timer
+     */
 	private static void tick(){
 		startTime = System.currentTimeMillis();
 	}
 	
+    /**
+     Method to stop a timer and return the time passed
+     */
 	private static float tock(){
 		return (System.currentTimeMillis() - startTime) / 1000.0f; 
 	}
 	
+    /**
+     Main method for the application
+     */
 	public static void main(String[] args) {
 		
 		if(args.length != 1)
@@ -41,15 +46,10 @@ public class TreeGrowSeq {
 
 		View v = new View(sundata.sunmap.getDimX(), sundata.sunmap.getDimY(), arr);
         
-        count = 0;
-        int runCount = 0; // for testing specific amount of runs
-        
         while (true) {
             
             if (v.reset == true) {
-                //count = 0;
-                //v.yearLabel.setText("Year " + Integer.toString(count));
-                v.reset();
+                v.set(0);
                 for (Tree t: arr) {
                     t.setExt((float)0.4);
                 }
@@ -57,9 +57,8 @@ public class TreeGrowSeq {
             }
             
             else if (v.run == true) {
-                //System.out.println("\nRun " + count);
-                tick();
-                v.yearIncrease();
+                //tick();
+                v.incr();
                 for (int i = 0; i < 20 ; i+=2) {
                     for (Tree t : arr)
                     {
@@ -72,12 +71,8 @@ public class TreeGrowSeq {
                 }
                 
                 map.resetShade();
-                count++;
-                v.yearLabel.setText("Year " + Integer.toString(count));
 
-                System.out.println(tock());
-                runCount++;
-                if (runCount > 100) { System.exit(0); }
+                //System.out.println(tock());
             
             }
             else {
