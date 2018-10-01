@@ -12,44 +12,45 @@ public class ForestPanel extends JPanel implements Runnable {
 	ForestPanel(Tree[] trees) {
 		forest=trees;
 	}
-		
+	
+    /**
+     Method to
+     
+     @param g
+     */
 	public void paintComponent(Graphics g) {
 		int width = getWidth();
 		int height = getHeight();
 		g.clearRect(0,0,width,height);
 		    
-		// draw the forest in different canopy passes
-		Random rnd = new Random(0); // providing the same seed gives trees consistent colouring
+		Random rnd = new Random(0);
 
-		// start from small trees of [0, 2) extent
 		float minh = 0.0f;
 		float maxh = 2.0f;
 		for(int layer = 0; layer <= 10; layer++) {
 			for(int t = 0; t < forest.length; t++){
 				int rt = rndorder.get(t); 
-				if(forest[rt].getExt() >= minh && forest[rt].getExt() < maxh) { // only render trees in current band
-					// draw trees as rectangles centered on getX, getY with random greenish colour
+				if(forest[rt].getExt() >= minh && forest[rt].getExt() < maxh) {
 					g.setColor(new Color(rnd.nextInt(100), 150+rnd.nextInt(100), rnd.nextInt(100)));
 					g.fillRect(forest[rt].getY() - (int) forest[rt].getExt(), forest[rt].getX() - (int) forest[rt].getExt(),
 						   2*(int) forest[rt].getExt()+1,2*(int) forest[rt].getExt()+1);
 				}
-				// g.setColor(Color.black);
-				// g.fillRect(forest[rt].getY(), forest[rt].getX(), 1, 1); // draw the trunk
 			}
-			minh = maxh;  // next band of trees
+			minh = maxh;
 			maxh += 2.0f;
 		}	
 	}
 	
+    /**
+     Method to
+     */
 	public void run() {
 			
-		// reordering so that trees are rendered in a more random fashion
 		rndorder = new ArrayList<Integer>();
 		for(int l = 0; l < forest.length; l++)
 			rndorder.add(l);
 		java.util.Collections.shuffle(rndorder);
 		
-		// render loop
 		while(true) {
 			repaint(50);
 			try {
